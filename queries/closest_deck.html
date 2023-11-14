@@ -1,0 +1,169 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load('current', {'packages':['table']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawTable);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Building Name');
+        data.addColumn('string', 'Deck Name');
+		data.addColumn('number', 'Distance');
+		data.addColumn('number', 'Minutes');
+        data.addRows([
+			["Anthony-Seeger Hall", "Warsaw Avenue Parking Deck", 0.2, 3],
+			["Bioscience Building",	"Champions Drive Parking Deck",	0.8, 14],
+			["Bridgeforth Stadium",	"Champions Drive Parking Deck",	0.1, 1],
+			["Burruss Hall", "Grace Street Parking Deck", 0.1, 2],
+			["Campbell Building", "Mason Street Parking Deck", 1.2, 24],
+			["Carrier Library", "Grace Street Parking Deck", 0.2, 5],
+			["Chandler Hall", "Champions Drive Parking Deck", 0.3, 5],
+			["Cleveland Hall", "Mason Street Parking Deck",	0.2, 4],
+			["Darcus Johnson Hall",	"Warsaw Avenue Parking Deck", 0.3, 7],
+			["Driver Drive Modular", "Champions Drive Parking Deck", 0.8, 17],
+			["Duke Hall", "Mason Street Parking Deck", 0.2, 4],
+			["Engineering/Geosciences",	"Champions Drive Parking Deck",	0.7, 15],
+			["Festival", "Champions Drive Parking Deck", 0.9, 20],
+            ["Forbes Center", "Warsaw Avenue Parking Deck",	0.1, 2],
+            ["Gabbin Hall",	"Champions Drive Parking Deck",	0.3, 6],
+			["Godwin Hall",	"Grace Street Parking Deck", 0.3, 7],
+			["Grafton-Stovall Theater",	"Grace Street Parking Deck",0.1, 2],
+			["Harrison Hall", "Warsaw Avenue Parking Deck",	0.3, 6],
+			["Hartman Hall",	"Champions Drive Parking Deck",	0.2, 3],
+			["Health and Human Services", "Grace Street Parking Deck", 0.1, 2],
+			["Hillside Hall", "Grace Street Parking Deck", 0.2, 4],
+			["Hoffman Hall", "Warsaw Avenue Parking Deck", 0.3,	8],
+			["Hotel Madison", "Mason Street Parking Deck", 0.2, 4],
+			["Ice House", "Mason Street Parking Deck", 0.6, 11],
+			["ISAT/CS Building", "Champions Drive Parking Deck", 0.8, 14],
+			["Jackson Hall", "Grace Street Parking Deck", 0.3, 6],
+			["Johnston Hall", "Mason Street Parking Deck", 0.2,	5],
+			["Keezell Hall", "Grace Street Parking Deck", 0.2, 3],
+			["Lakeview Hall", "Champions Drive Parking Deck", 0.4, 8],
+			["Madison Hall", "Mason Street Parking Deck", 0.2, 3],
+			["Mauck Stadium", "Grace Street Parking Deck", 0.5, 10],
+			["Maury Hall", "Champions Drive Parking Deck", 0.3, 6],
+			["Memorial Hall", "Warsaw Avenue Parking Deck", 0.5, 11],
+			["Memorial Hall Arts Complex", "Mason Street Parking Deck",	0.5, 11],
+			["Miller Hall",	"Mason Street Parking Deck", 0.1, 3],
+			["Montpelier Hall",	"Mason Street Parking Deck", 0.1, 2],
+			["Moody Hall", "Grace Street Parking Deck", 0.3, 6],
+      		["Music Building", "Warsaw Avenue Parking Deck", 0.2, 5],
+      		["Paul Jennings Hall", "Grace Street Parking Deck", 0.6, 12],
+      		["Physics/Chemistry", "Grace Street Parking Deck", 0.7, 14],
+      		["Roop Hall", "Warsaw Avenue Parking Deck", 0.3, 7],
+      		["Sheldon Hall", "Warsaw Avenue Parking Deck", 0.3, 7],
+      		["Student Success Center", "Mason Street Parking Deck", 0.1, 2],
+      		["Studio Center", "Warsaw Avenue Parking Deck", 0.3, 6],
+     		["Taylor Hall", "Grace Street Parking Deck", 0.2, 4],
+      		["The Hub", "Mason Street Parking Deck", 0.1, 3],
+      		["The Union", "Grace Street Parking Deck", 0.2, 3],
+     		["The United Way Building", "Warsaw Avenue Parking Deck", 0.4, 7],
+      		["UREC", "Champions Drive Parking Deck", 0.5, 10],
+      		["Wayland Hall", "Warsaw Avenue Parking Deck", 0.3, 6],
+      		["Wilson Hall", "Mason Street Parking Deck", 0.3, 6],
+      		["Wine-Price Hall", "Mason Street Parking Deck", 0.2, 5],
+     		["Zane Showker Hall", "Champions Drive Parking Deck", 0.2, 3]
+        ]);
+
+		var table_data = new google.visualization.DataTable();
+        table_data.addColumn('string', 'Building Name');
+		table_data.addColumn('number', 'Distance');
+		table_data.addColumn('number', 'Minutes');
+        table_data.addRows([
+			["Anthony-Seeger Hall", 0.2, 3],
+			["Bioscience Building",	0.8, 14],
+			["Bridgeforth Stadium",	0.1, 1],
+			["Burruss Hall", 0.1, 2],
+			["Campbell Building", 1.2, 24],
+			["Carrier Library", 0.2, 5],
+			["Chandler Hall", 0.3, 5],
+			["Cleveland Hall", 0.2, 4],
+			["Darcus Johnson Hall", 0.3, 7],
+			["Driver Drive Modular", 0.8, 17],
+			["Duke Hall", 0.2, 4],
+			["Engineering/Geosciences",	0.7, 15],
+			["Festival", 0.9, 20],
+            ["Forbes Center", 0.1, 2],
+            ["Gabbin Hall",	0.3, 6],
+			["Godwin Hall", 0.3, 7],
+			["Grafton-Stovall Theater",0.1, 2],
+			["Harrison Hall", 0.3, 6],
+			["Hartman Hall", 0.2, 3],
+			["Health and Human Services", 0.1, 2],
+			["Hillside Hall", 0.2, 4],
+			["Hoffman Hall", 0.3, 8],
+			["Hotel Madison", 0.2, 4],
+			["Ice House", 0.6, 11],
+			["ISAT/CS Building", 0.8, 14],
+			["Jackson Hall", 0.3, 6],
+			["Johnston Hall", 0.2,	5],
+			["Keezell Hall", 0.2, 3],
+			["Lakeview Hall", 0.4, 8],
+			["Madison Hall", 0.2, 3],
+			["Mauck Stadium", 0.5, 10],
+			["Maury Hall", 0.3, 6],
+			["Memorial Hall", 0.5, 11],
+			["Memorial Hall Arts Complex", 0.5, 11],
+			["Miller Hall",	0.1, 3],
+			["Montpelier Hall",	0.1, 2],
+			["Moody Hall", 0.3, 6],
+      		["Music Building", 0.2, 5],
+      		["Paul Jennings Hall", 0.6, 12],
+      		["Physics/Chemistry", 0.7, 14],
+      		["Roop Hall", 0.3, 7],
+      		["Sheldon Hall", 0.3, 7],
+      		["Student Success Center", 0.1, 2],
+      		["Studio Center", 0.3, 6],
+     		["Taylor Hall", 0.2, 4],
+      		["The Hub", 0.1, 3],
+      		["The Union", 0.2, 3],
+     		["The United Way Building", 0.4, 7],
+      		["UREC", 0.5, 10],
+      		["Wayland Hall", 0.3, 6],
+      		["Wilson Hall", 0.3, 6],
+      		["Wine-Price Hall", 0.2, 5],
+     		["Zane Showker Hall", 0.2, 3]
+        ]);
+
+        // Set chart options
+        var options = {'width':600,
+                       'height':400};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(table_data, options);
+        //Create table
+        var table = new google.visualization.Table(document.getElementById('table_disp'));
+        table.draw(data, {showRowNumber: true, width: '50%', height: '50%'});
+      }
+    </script>
+  </head>
+  
+  <body>
+    <h2>Query</h2>
+    <pre>
+	SELECT *
+	FROM closest_deck()
+    </pre>
+    <!--Div that will hold the Table-->
+    <h2>Table</h2>
+    <div id="table_disp"></div>
+    <!--Div that will hold the pie chart-->
+    <h2>Chart</h2>
+    <div id="chart_div"></div>
+  </body>
+</html>

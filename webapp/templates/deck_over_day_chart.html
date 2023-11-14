@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Deck Capacity Over a Day</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css') }}">
+    </head>
+    
+    <body>
+        <div class="header">
+            <div class="logo_container">
+                <h1>JMU Parking Data</h1>
+            </div>
+        </div>
+        <div class="sub_header">
+            <div class="navigation">
+                <button ><a href="/">Home</a></button>
+                {% if building and deck and building != 'None' and deck != 'None' %}
+                <button name="navigate" id="navigate" type="submit" onclick="nav()">Navigate</button>
+                {% endif %}
+                <button name = "nav"><a href="/occupancy_at_date_time">Deck Volume</a></button>
+            </div>
+        </div>
+        
+        <div class="sub_sub_header">
+            <div class="logo_container2">
+                <h4>Deck Capacity Over a Day</h4>
+            </div>
+        </div>
+    
+    <form class="form_align">
+        <p>Deck Name:
+            <select name="deck" value="{{ deck }}">
+                {%if not deck%}
+                    <option value="None" selected disabled hidden>
+                        Select a Deck
+                    </option>
+                {%endif%}
+                {%if decks%}
+                    {%for value in decks%}
+                        {%if deck == value[0]%}
+                            <option value="{{ value[0] }}" selected>{{ value[0] }}</option>
+                        {%else%}
+                            <option value="{{ value[0] }}">{{ value[0] }}</option>
+                        {%endif%}
+                    {%endfor%}
+                {%endif%}
+            </select>
+
+            Select Day
+            <input name="date" type="date">
+
+        </p>
+        <p><input type="submit"></p>
+    </form>
+
+    <h3>Deck Capacity Over a Day</h3>
+
+    <div id="chart" style="width: 500px; height: 300px;  display: block; margin: 0 auto;"></div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Time', 'Capacity'],
+                {% for row in dat %}
+                    ['{{ row[0] }}', {{ row[1] }}],
+                {% endfor %}
+            ]);
+
+            var options = {
+                chartArea: { width: '60%', height: '90%' },
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('chart'));
+            chart.draw(data, options);
+        }
+    </script>
+
+
+</body>
+</html>

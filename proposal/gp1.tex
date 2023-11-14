@@ -1,0 +1,113 @@
+%%
+%% GENERAL INSTRUCTIONS
+%%
+%% Each team member should contribute to the writing/editing of each section.
+%%
+%% Replace the \section titles with specific phrases related to your project.
+%%
+%% You may rearrange the order as long as you address the main prompts below.
+%%
+
+\documentclass[11pt]{article}
+
+% fonts
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[sc]{mathpazo}
+
+% spacing
+\usepackage[margin=1in]{geometry}
+\setlength{\parskip}{1ex}
+\usepackage{multicol}
+\usepackage{setspace}
+\onehalfspacing
+
+\newcommand{\pk}[1]{\underline{\smash{#1}}}
+\newcommand{\fk}[1]{\textit{#1}}
+
+% orphans and widows
+\clubpenalty=10000
+\widowpenalty=10000
+
+%------------------------------------------------------------------------------%
+\begin{document}
+
+%% Insert the name of your project, the name of your team, and the name and email of each student.
+
+\begin{center}
+\bfseries\huge
+Enrollment and Parking Data Schedule Planner
+\end{center}
+
+\begin{center}
+\itshape\large
+Outliers
+\end{center}
+
+\begin{multicols}{4}
+\centering
+
+Tyler Urban \\
+{\footnotesize urbanta@dukes.jmu.edu}
+
+Thomas Lane \\
+{\footnotesize lanetb@dukes.jmu.edu}
+
+Kyle LaCanna \\
+{\footnotesize lacannkj@dukes.jmu.edu}
+
+Brantley Cervarich \\
+{\footnotesize cervarbn@dukes.jmu.edu}
+
+\end{multicols}
+
+%------------------------------------------------------------------------------%
+\section*{Problem and Vision}
+
+%% Introduce the main idea of your project. What is the exact problem you are going to solve? What is your vision for the solution? How will this benefit potential stakeholders? (e.g., users, data owners, society) Provide background information about the problem domain.
+
+\indent \indent Currently at JMU, there is a massive need for more student parking. This is because there are specific times with high volume in the amount of classes and at these times the parking decks fill up to capacity very quickly leaving the students who come later, stranded with no spots. The simple solution to this problem would be to just build more parking lots, however the lack of undeveloped land around the main campus are makes this hard to accomplish. Through the use of data and relationships our team has come up with an idea for an alternate solution to this problem.
+
+\indent \indent Our vision is to make a simple planner that students can utilize when planning the schedules for the upcoming semester to try and relieve the congested periods and reduce the lack of parking overall. We plan to do this by looking at previous semesters and establish trends when compared to the parking lot utilization. With these trends we will be able to recommend times that would be easier to find parking at for each of the classes a student is planning to take. For the single student we aim to make finding a spot in close proximity to the class easier, and overall we hope to spread out the need for parking throughout the entire day, verses the few times that have the most classes.
+
+%------------------------------------------------------------------------------%
+\section*{Data and Questions}
+
+%% Describe the data sets you will use. Where does the data come from, and who owns it? What is the data primarily about? About how much data is available? Include several example rows/instances to illustrate what the data looks like.
+
+%% Discuss two or three specific questions about the data that your project will answer. How are these questions interesting? Why are they important questions to answer? What resources already exist that help answer these questions?
+
+\indent \indent We will use data sets from JMU Parking services, which summarize the population of JMU's parking garages over date and time, along with data sets from the Office of The Registrar which contain course enrollment data. \\
+
+\noindent \ignorespacesafterend Deck(\pk{deck\_name}, capacity, address) \\
+Parking\_Observation(\pk{date}, \pk{time}, \pk{deck\_name}, occupancy) \\
+Building(\pk{building\_name}, address) \\
+Class(\pk{course\_number}, \fk{building\_name}, year, semester, time, days\_of\_week, occupancy) \\
+
+We will look to answer which garages are the most full at certain times on certain days of the week, and how that correlates with which buildings on campus have the most students taking classes at the same time on the same days of the week. These questions could be interesting to JMU students looking to decide which courses to take at which times in which buildings in order to more easily find parking. They could also help students decide which lots to try first when looking for parking. Another question these data sets could answer is at what times and where there will be the most traffic. If there is a period of time where a garage is filling up or emptying rapidly we can deduce that the area surrounding it will have a lot of traffic. We will use data over the course of multiple school years to get a broader idea. This could be of interest to both students and professors trying to plan when to leave for class.
+
+%------------------------------------------------------------------------------%
+\section*{Users and Specs}
+
+%% Describe the main users of your application. Be specific; for example, what is their profession? How much experience do they have with data? Why would they want to use your project?
+
+%% Discuss the high-level specifications. What functionality will your completed application provide? Explain a few use cases: what the user will do, and what the app will do. Leave out the technical details, such as what programming languages and software tools you'll use.
+
+\indent \indent The main users for this application would be JMU students or Staff that utilize the parking facilities. There will be a wide range of people who will benefit from this application but the biggest and main group will be the students. This still leaves us with a plethora of different levels of experience with data since there are over 20,000 students currently attending JMU. Our focus would be to make the application as accessible as possible to the widest range of people possible. Anyone who has struggled to find parking on campus would want to utilize this application in order to find parking in an efficient manner. 
+
+This applications interface will consist of a heat map that will show where the most people are on campus at different times through out the day. It will also present information about the status of the parking decks throughout the day. The user would be presented with a heat map that would allow them to look through different times of a chosen day. The heat map will include data from across multiple semester and will show trends that have occurred in the past between class populations and parking. The user will be able to interact with a slider below the heat map to choose a specified date to view. They will also be able to view a bar graph that will show the amount of cars in each parking lot at the given time. Further, they will be able to view line graphs of trends for each parking garage through out the chosen day. All this information will allow the user to make a better decision on where they plan to park when they head to campus. 
+
+%------------------------------------------------------------------------------%
+\section*{About the Team}
+
+%% Include a short biographical sketch for each team member. Focus on academic and professional experience, not where you were born and what your hobbies are. For example, you might list the most recent/advanced CS courses you have completed, software projects you have worked on the in past, internships or other relevant work experience, and/or unique background abilities and skills that you will bring to the project.
+
+\textbf {Kyle LaCanna:} A Senior Computer Science major planning to graduate in the Spring. Currently a Teaching Assistant in the department of Computer Science. Currently enrolled in CS 347 (Web Development), CS 374 (Database Systems) and CS 450 (Operating Systems). \\
+
+\noindent \ignorespacesafterend \textbf{Tyler Urban:} A Computer Science major graduating in December. Has most recently taken CS 361 (Systems 2), CS 430 (Programming Languages), CS 349 (Developing Multimedia), and CS 327 (Discrete Structures 2). Currently enrolled in CS 374 (Database Systems), CS 445 (Machine Learning), CS 450 (Operating Systems), and CS 452 (Design and Analysis of Algorithms). Interned at a defense contractor called Knack Works in Chantilly VA, and will be working there full time as a Software Engineer after graduation. \\
+
+\noindent \ignorespacesafterend \textbf{Brantley Cervarich:} A junior Computer Science major graduating in the Spring 2023. Currently taking CS 240 (Algorithms and Data Structures), CS 347 (Web Development), CS 374 (Database Systems), and some electives. Experienced in Java, and familiar with SQL, Python, and C. Interned at Carfax in Fairfax County, as a Business Intelligence Specialist, and worked closely with SQL, data analytics, and their database structure. \\
+
+\noindent \ignorespacesafterend \textbf{Thomas Lane:} A Computer Science major graduating in December 2022. Currently enrolled in CS 261 (Computer Systems 1) and CS 374 (Database Systems). Has taken CS 240 (Algorithms and Data Structures), CS 345 (Software Engineering), and CS 327 (Discrete Structures 2). Has worked with computers all his life and is currently starting to work as a computer lab assistant for the Physics and Chem department. \\
+%------------------------------------------------------------------------------%
+\end{document}

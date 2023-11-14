@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load('current', {'packages':['table']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawTable);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Building Name');
+        data.addColumn('number', 'Distance');
+		data.addColumn('number', 'Minutes');
+        data.addRows([
+			["Bridgeforth Stadium", 0.1, 1],
+			["Hartman Hall", 0.2, 3],
+			["Zane Showker Hall", 0.2, 3],
+			["Maury Hall", 0.3, 6],
+			["Moody Hall", 0.3, 5],
+			["Chandler Hall",	0.3, 5],
+			["Wayland Hall", 0.3,	7],
+			["Hoffman Hall", 0.3,	6],
+			["Wilson Hall", 0.3, 7],
+			["Gabbin Hall", 0.3, 6],
+			["Darcus Johnson Hall", 0.3, 6],
+			["Jackson Hall", 0.3, 6],
+			["Godwin Hall", 0.3, 5],
+        ]);
+
+        // Set chart options
+        var options = {'width':600,
+                       'height':400};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        //Create table
+        var table = new google.visualization.Table(document.getElementById('table_disp'));
+        table.draw(data, {showRowNumber: true, width: '25%', height: '50%'});
+      }
+    </script>
+  </head>
+  
+  <body>
+    <h2>Query</h2>
+    <pre>
+    SELECT *
+    FROM buildings_within_distance('Champions Drive Parking Deck', 0.3)
+    </pre>
+    <!--Div that will hold the Table-->
+    <h2>Table</h2>
+    <div id="table_disp"></div>
+    <!--Div that will hold the pie chart-->
+    <h2>Chart</h2>
+    <div id="chart_div"></div>
+  </body>
+</html>

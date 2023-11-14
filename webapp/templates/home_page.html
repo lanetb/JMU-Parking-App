@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin=""/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+
+
+</head>
+<body>
+
+<div class="header">
+    <div class="logo_container">
+        <h1>JMU Parking Data</h1>
+    </div>
+</div>
+<div class="sub_header">
+    <div class="navigation">
+        <button ><a href="/">Home</a></button>
+       
+        <button name = "nav"><a href="/occupancy_at_date_time">View Deck Volume</a></button>
+    </div>
+</div>
+
+<div class="sub_sub_header">
+    <div class="logo_container2">
+        <h4>Campus Parking Map</h4>
+    </div>
+</div>
+
+<section>
+<form class="form_align">
+    <p>Date and Time:
+        <input name="timestamp" type="datetime-local" value="{{ timestamp }}">
+    </p>
+    <p>Building:
+        <select name="building" value="{{ building }}">
+            {% if building %}
+                <option value="None">
+                    Select a Building
+                </option>
+            {% else %}
+                <option value="None" selected disabled hidden>
+                    Select a Building
+                </option>
+            {% endif %}
+            {% for value in buildings_list %}
+                {% if building == value[0] %}
+                    <option value="{{ value[0] }}" selected>{{ value[0] }}</option>
+                {% else %}
+                    <option value="{{ value[0] }}">{{ value[0] }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </p>
+    <p>Deck:
+        <select name="deck" value="{{ deck }}">
+            {% if deck %}
+                <option value="None">
+                    Select a Deck
+                </option>
+            {% else %}
+                <option value="None" selected disabled hidden>
+                    Select a Deck
+                </option>
+            {% endif %}
+            {% for value in decks_list %}
+                {% if deck == value[0] %}
+                    <option value="{{ value[0] }}" selected>{{ value[0] }}</option>
+                {% else %}
+                    <option value="{{ value[0] }}">{{ value[0] }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </p>
+    <p>Distance:
+        <input type="number" step="0.1" min="0.1" name="distance" value="{{ distance }}">
+    </p>
+    <p>Number of buildings:
+        <input type="number" step="1" min="1" name="max_number" value="{{ max_number }}">
+    </p>
+    <p><input type="submit"></p>
+</form>
+
+    {% if building and deck and building != 'None' and deck != 'None' %}
+    <button name="navigate" id="navigate" type="submit" onclick="nav()">Navigate</button>
+    {% endif %}
+
+{% if building and deck and building != 'None' and deck != 'None' %}
+<button name="navigate" id="navigate" type="submit" onclick="nav()">Navigate</button>
+{% endif %}
+
+
+<div id="map"></div>
+<script>
+    var mymap = L.map('map').setView([38.4351, -78.8698], 14);
+
+    var greenIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var redIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var violetIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var orangeIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    var greyIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    const championsDeckIcon = L.divIcon({
+        html: '<i class="fa fa-car fa-4x" style="color: #31882A"></i>',
+        iconSize: [0, 0],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+
+    const graceStreetDeckIcon = L.divIcon({
+        html: '<i class="fa fa-car fa-4x" style="color: #982E40"></i>',
+        iconSize: [0, 0],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+
+    const masonStreetDeckIcon = L.divIcon({
+        html: '<i class="fa fa-car fa-4x" style="color: #742E98"></i>',
+        iconSize: [0, 0],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+
+    const warsawDeckIcon = L.divIcon({
+        html: '<i class="fa fa-car fa-4x" style="color: #3274A3"></i>',
+        iconSize: [0, 0],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+
+    const ballardDeckIcon = L.divIcon({
+        html: '<i class="fa fa-car fa-4x" style="color: #98652E"></i>',
+        iconSize: [0, 0],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+
+    const chesapeakeDeckIcon = L.divIcon({
+        html: '<i class="fa fa-car fa-4x" style="color: #6B6B6B"></i>',
+        iconSize: [0, 0],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+    });
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidHl1cmJhbiIsImEiOiJja3ZpNzBmNG1iMGozMzBwaDZvMGcyZ2dqIn0.cBYfWL4oqKGyRqVE31WbBQ', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'your.mapbox.access.token'
+    }).addTo(mymap);
+
+    {% for row in buildings %}
+        {% if building_occupancies == {} %}
+            {% if row[4] == 1 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: greenIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 2 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: redIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 3 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: violetIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 4 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 5 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: orangeIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 6 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: greyIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% endif %}
+        {% elif not building_occupancies[row[7]] %}
+            {% if row[4] == 1 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: greenIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> 0 <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 2 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: redIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> 0 <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 3 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: violetIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> 0 <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 4 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> 0 <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 5 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: orangeIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> 0 <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 6 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: greyIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> 0 <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% endif %}
+        {% else %}
+            {% if row[4] == 1 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: greenIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ building_occupancies[row[7]] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 2 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: redIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ building_occupancies[row[7]] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 3 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: violetIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ building_occupancies[row[7]] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 4 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ building_occupancies[row[7]] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 5 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: orangeIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ building_occupancies[row[7]] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% elif row[4] == 6 %}
+                L.marker([{{ row[1] }}, {{ row[2] }}], {
+                    icon: greyIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ building_occupancies[row[7]] }} <br> <b>Address:</b> {{ row[3] }}').addTo(mymap);
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    {% for row in decks %}
+        {% if not deck_occupancies[row[1]] %}
+            {% if row[1] == 1 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: championsDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[2] }} <br> <b>Max Occupancy: 453</b>').addTo(mymap);
+            {% elif row[1] == 2 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: graceStreetDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[2] }} <br> <b>Max Occupancy: 464</b>').addTo(mymap);
+            {% elif row[1] == 3 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: masonStreetDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[2] }} <br> <b>Max Occupancy: 855</b>').addTo(mymap);
+            {% elif row[1] == 4 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: warsawDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[2] }} <br> <b>Max Occupancy: 765</b>').addTo(mymap);
+            {% elif row[1] == 5 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: ballardDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[2] }} <br> <b>Max Occupancy: 1,551</b>').addTo(mymap);
+            {% elif row[1] == 6 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: chesapeakeDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Address:</b> {{ row[2] }} <br> <b>Max Occupancy: 1,088</b>').addTo(mymap);
+            {% endif %}
+        {% else %}
+            {% if row[1] == 1 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: championsDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ deck_occupancies[row[1]] }} <br> <b>Max Occupancy: 453</b> <br> <b>Address:</b> {{ row[2] }}').addTo(mymap);
+            {% elif row[1] == 2 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: graceStreetDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ deck_occupancies[row[1]] }} <br> <b>Max Occupancy: 464</b> <br> <b>Address:</b> {{ row[2] }}').addTo(mymap);
+            {% elif row[1] == 3 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: masonStreetDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ deck_occupancies[row[1]] }} <br> <b>Max Occupancy: 855</b> <br> <b>Address:</b> {{ row[2] }}').addTo(mymap);
+            {% elif row[1] == 4 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: warsawDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ deck_occupancies[row[1]] }} <br> <b>Max Occupancy: 765</b> <br> <b>Address:</b> {{ row[2] }}').addTo(mymap);
+            {% elif row[1] == 5 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: ballardDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ deck_occupancies[row[1]] }} <br> <b>Max Occupancy: 1,551</b> <br> <b>Address:</b> {{ row[2] }}').addTo(mymap);
+            {% elif row[1] == 6 %}
+                L.marker([{{ row[3] }}, {{ row[4] }}], {
+                    icon: chesapeakeDeckIcon,
+                    clickable: true
+                }).bindPopup('<b>Name:</b> {{ row[0] }} <br> <b>Occupancy:</b> {{ deck_occupancies[row[1]] }} <br> <b>Max Occupancy: 1,088</b> <br> <b>Address:</b> {{ row[2] }}').addTo(mymap);
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    var x = true;
+
+    function nav() {
+
+        var route = L.Routing.control({
+            waypoints: [
+                L.latLng({{ decks[0][3] }}, {{ decks[0][4] }}),
+                L.latLng({{ buildings[0][1] }}, {{ buildings[0][2] }})
+            ],
+        })
+
+        if (x) {
+            route.addTo(mymap);
+            x = false
+        }
+        else {
+            x = true
+        }
+    }
+
+
+</script>
+</section>
+</body>
+</html>

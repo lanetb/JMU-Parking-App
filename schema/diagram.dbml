@@ -1,0 +1,79 @@
+Table observations{
+  date_time timestamp
+  type text
+  occ int
+  deck_id int
+  obs_id int [pk]
+  
+  Indexes {
+    (date_time, type, occ, deck_id)
+  }
+}
+
+Ref: terms.term > meetings.term
+
+Table terms {
+  term int [pk]
+  start_date date
+  end_date date
+}
+
+Ref: observations.deck_id > decks.deck_id
+
+
+Table decks as U {
+  deck_name text
+  deck_id int [pk]
+  address text
+  latitude double
+  longitude double
+  
+  Indexes {
+    (deck_name)
+  }
+}
+
+Ref: decks.deck_id < distances.deck_id 
+
+Table distances {
+  minutes int
+  distance real
+  deck_id int 
+  building_id int
+  distance_id int [pk]
+  
+  Indexes {
+    (minutes, distance, deck_id, building_id)
+  }
+ }
+
+Ref: distances.building_id > buildings.building_id
+
+Table buildings {
+  building_name text
+  building_id int [pk]
+  address text
+  latitude double
+  longitude double
+  
+  Indexes {
+    (building_name)
+  }
+ }
+ 
+Ref: buildings.building_id < meetings.building_id
+
+Table meetings {
+  course_nbr int
+  term int
+  days text
+  start_t time
+  end_t time
+  enrolled int
+  building_id int
+  meeting_id int [pk]
+  
+  Indexes {
+    (course_nbr, term, days, start_t, end_t, enrolled, building_id)
+  }
+}

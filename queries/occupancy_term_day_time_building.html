@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.load('current', {'packages':['table']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawTable);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Building');
+        data.addColumn('number', 'Enrolled');
+        data.addRows([
+            ['Duke Hall', 238],
+            ['Studio Center', 60],
+            ['Memorial Hall Arts Complex', 31],
+            ['Health and Human Services', 360],
+            ['Bioscience Building', 45],
+            ['ISAT/CS Building', 249],
+            ['Physics/Chemistry', 120],
+            ['Godwin Hall', 303],
+            ['Forbes Center', 154],
+            ['Memorial Hall', 96],
+            ['Miller Hall', 105],
+            ['Burruss Hall', 383],
+            ['Roop Hall', 73],
+            ['Harrison Hall', 204],
+            ['Festival', 31],
+            ['Student Success Center', 47],
+            ['Lakeview Hall', 6],
+            ['Carrier Library', 14],
+            ['Engineering/Geosciences', 363],
+            ['Madison Hall', 22],
+            ['Wilson Hall', 26],
+            ['Campbell Building', 2],
+            ['Hartman Hall', 208],
+            ['Grafton-Stovall Theater', 158],
+            ['Gabbin Hall', 92]
+        ]);
+
+        // Set chart options
+        var options = {'width': 1100,
+                       'height': 1000,
+                       'position': 'top'};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        //Create table
+        var table = new google.visualization.Table(document.getElementById('table_disp'));
+        table.draw(data, {showRowNumber: true, width: '25%', height: '50%'});
+      }
+    </script>
+  </head>
+
+  <body>
+    <h2>Query</h2>
+    <pre>
+    SELECT * 
+    FROM occupancy_term_day_time_building(1208, 'TU', '13:00:00', '14:15:00');
+    </pre>
+    <!--Div that will hold the Table-->
+    <h2>Table</h2>
+    <div id="table_disp"></div>
+    <!--Div that will hold the pie chart-->
+    <h2>Chart</h2>
+    <div id="chart_div"></div>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+# Environments
+.env/
+.venv/
+env/
+venv/
+
+# Byte-compiled
+*.pyc
+__pycache__/
+
+# Flask config
+instance/
+
+# Unit testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Distribution
+build/
+dist/
+*.egg-info/
+
+# User settings
+.vscode/

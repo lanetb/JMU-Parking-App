@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.load('current', {'packages':['table']});
+    google.charts.setOnLoadCallback(drawColColors);
+
+    function drawColColors() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Parking Deck');
+        data.addColumn('number', 'Parking Spaces Occupied');
+
+        data.addRows([
+       		['Grace Street Parking Deck', 270],
+            ['Champions Drive Parking Deck', 0],
+            ['Warsaw Avenue Parking Deck', 156],
+            ['Mason Street Parking Deck', 584]
+
+        ]);
+
+        var options = {
+            title: 'Number of Parking Spaces Occupied at Each Parking Deck',
+            hAxis: {
+                title: 'Parking Deck',
+                format: 'h:mm a',
+                viewWindow: {
+                    min: [7, 30, 0],
+                    max: [17, 30, 0]
+                }
+            },
+            vAxis: {
+                title: 'Parking Spaces Occupied'
+            }
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        
+        
+        //Create table
+        var table = new google.visualization.Table(document.getElementById('table_disp'));
+        table.draw(data, {showRowNumber: true, width: '25%', height: '50%'});
+    }
+    </script>
+  </head>
+
+
+<h2>Query</h2>
+<pre>
+    SELECT * 
+    FROM occupancy_at_date_time(2018, 07, 18, 12);
+</pre>
+<!--Div that will hold the Table-->
+<h2>Table</h2>
+<div id="table_disp"></div>
+<!--Div that will hold the bar graph-->
+<h2>Chart</h2>
+<div id="chart_div" style="width: 800px; height: 500px;"></div>
+
+</body>
+</html>

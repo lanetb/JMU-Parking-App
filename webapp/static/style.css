@@ -1,0 +1,121 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+.header{
+    width: 100%;
+    height: 50px;
+    display: block;
+    background-color: #450084;
+}
+
+
+.logo_container{
+    margin-left: 25vw;
+    height: 100%;
+    display: table;
+    float: left;
+
+}
+
+.logo_container h1{
+    color: white;
+    margin-left: 100px;
+    height: 100%;
+    font-family: "Arial";
+    font-size: 1.5vw;
+    display: table-cell;
+    vertical-align: middle;
+
+}
+.sub_header{
+
+    width: 100%;
+    height: 50px;
+    display: block;
+    background-color: #DFD2AA;
+
+}
+
+.navigation{
+    display: inline-flex;
+    vertical-align: middle;
+    
+    margin-left: 30vw;
+}
+
+.navigation button{
+    padding: .95vw .5vw;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-family: Arial;
+    font-size: 1vw;
+    color: #450084;
+    background-color: #DFD2AA;
+}
+.navigation button:hover{
+    background: #AD9C65;
+}
+
+.sub_sub_header{
+
+    width: 100%;
+    height: 50px;
+    display: block;
+    background-color: #F4EFE1;
+}
+.logo_container2{
+    margin-left: 35vw;
+    height: 100%;
+    display: table;
+    float: left;
+
+}
+
+.logo_container2 h4{
+    color: #450084;
+    margin-left: 200px;
+    height: 100%;
+    font-family: "Arial";
+    font-size: 1.2vw;
+    display: table-cell;
+    vertical-align: middle;
+
+}
+.form_align{
+    max-width: 30vw;
+    margin: 2rem auto;
+}
+.chart{
+    display: flexbox;
+    align-content: center;
+}
+
+section{
+    margin-left: 25vw;
+    margin-right: 25vw;
+}
+p{
+    display: block;
+}
+h3{
+    text-align: center;
+}
+
+input, textarea, select{
+    display: block;
+    width: 100%;
+}
+option{
+    display: block;
+}
+
+#map {  
+    position: relative;
+    height: 500px;
+
+}
