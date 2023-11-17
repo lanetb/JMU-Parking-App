@@ -23,3 +23,9 @@ dist/
 
 # User settings
 .vscode/
+schema/terms.csv
+schema/observations.csv
+schema/meetings.csv
+schema/distances.csv
+schema/decks.csv
+schema/buildings.csv
