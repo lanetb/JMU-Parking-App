@@ -1,5 +1,5 @@
 # See the app in Action:
-[parking.tommylane.me](parking.tommylane.me)
+[parking.tommylane.me](http://parking.tommylane.me)
 
 # outliers
 Team 2: Outliers
